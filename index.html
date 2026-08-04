@@ -35,7 +35,6 @@
       align-items: center;
     }
 
-    /* 9:16 portrait container matching full screen */
     .phone-container {
       width: 100vw;
       height: 100vh;
@@ -88,8 +87,56 @@
       height: 100%;
       display: block;
       cursor: crosshair;
-      -webkit-tap-highlight-color: transparent !important;
-      outline: none !important;
+    }
+
+    /* Animated Hand / Finger Hint */
+    .hand-hint {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      font-size: 42px;
+      pointer-events: none;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 12px rgba(200, 100, 255, 0.8));
+      animation: drawHeartHint 3.2s infinite ease-in-out;
+      transition: opacity 0.3s ease;
+    }
+
+    .hand-hint.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Keyframes for drawing a heart pattern with finger */
+    @keyframes drawHeartHint {
+      0% {
+        transform: translate(-50%, -20px) scale(0.9);
+        opacity: 0;
+      }
+      15% {
+        transform: translate(-50%, -20px) scale(1);
+        opacity: 1;
+      }
+      30% {
+        transform: translate(-80px, -70px) scale(1);
+      }
+      50% {
+        transform: translate(0px, 30px) scale(1);
+      }
+      70% {
+        transform: translate(80px, -70px) scale(1);
+      }
+      85% {
+        transform: translate(-50%, -20px) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -20px) scale(0.9);
+        opacity: 0;
+      }
     }
 
     .controls {
@@ -111,14 +158,7 @@
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       outline: none !important;
       text-align: center;
-      -webkit-tap-highlight-color: transparent !important;
       -webkit-appearance: none;
-    }
-
-    .btn:focus, .btn:active {
-      outline: none !important;
-      box-shadow: none;
-      -webkit-tap-highlight-color: transparent !important;
     }
 
     .btn-save {
@@ -220,6 +260,7 @@
     </div>
 
     <div class="canvas-wrapper">
+      <div class="hand-hint" id="handHint">👆</div>
       <canvas id="gestureCanvas"></canvas>
     </div>
 
@@ -246,13 +287,13 @@
     const overlayCloseBtn = document.getElementById('overlayCloseBtn');
     const statusTitle = document.getElementById('status-title');
     const statusSub = document.getElementById('status-sub');
+    const handHint = document.getElementById('handHint');
 
     let isDrawing = false;
     let hasDrawn = false;
     let isLocked = false;
     let points = [];
 
-    // Auto trigger full screen API on first user interaction
     function triggerFullscreen() {
       if (!document.fullscreenElement && !document.webkitFullscreenElement) {
         const docEl = document.documentElement;
@@ -284,6 +325,10 @@
     function startDrawing(e) {
       triggerFullscreen();
       if (isLocked) return;
+      
+      // Сховуємо анімацію пальця при першому торканні
+      handHint.classList.add('hidden');
+
       isDrawing = true;
       hasDrawn = true;
       const pos = getPos(e);
@@ -343,6 +388,7 @@
       points = [];
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       fullOverlay.classList.remove('show');
+      handHint.classList.remove('hidden');
       statusTitle.textContent = "Set up your password";
       statusSub.textContent = "Draw any shape, heart, or gesture";
     }
