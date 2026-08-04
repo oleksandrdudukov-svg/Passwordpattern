@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Custom Password Setup</title>
   
-  <!-- PWA Fullscreen Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
@@ -86,21 +85,21 @@
       width: 100%;
       height: 100%;
       display: block;
-      cursor: crosshair;
+      cursor: none;
     }
 
-    /* Animated Hand / Finger Hint */
+    /* Анімована підказка-початок */
     .hand-hint {
       position: absolute;
-      width: 50px;
-      height: 50px;
-      font-size: 42px;
+      width: 60px;
+      height: 60px;
+      font-size: 56px;
       pointer-events: none;
       z-index: 10;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      filter: drop-shadow(0 0 12px rgba(200, 100, 255, 0.8));
+      filter: drop-shadow(0 0 16px rgba(200, 100, 255, 0.9));
       animation: drawHeartHint 3.2s infinite ease-in-out;
       transition: opacity 0.3s ease;
     }
@@ -110,33 +109,32 @@
       visibility: hidden;
     }
 
-    /* Keyframes for drawing a heart pattern with finger */
+    /* Великий палець на весь екран */
+    .touch-finger {
+      position: absolute;
+      font-size: 56px; /* Збільшений розмір */
+      pointer-events: none;
+      z-index: 999;
+      transform: translate(-30%, -10%);
+      filter: drop-shadow(0 0 20px rgba(217, 128, 255, 1));
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s ease;
+    }
+
+    .touch-finger.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
     @keyframes drawHeartHint {
-      0% {
-        transform: translate(-50%, -20px) scale(0.9);
-        opacity: 0;
-      }
-      15% {
-        transform: translate(-50%, -20px) scale(1);
-        opacity: 1;
-      }
-      30% {
-        transform: translate(-80px, -70px) scale(1);
-      }
-      50% {
-        transform: translate(0px, 30px) scale(1);
-      }
-      70% {
-        transform: translate(80px, -70px) scale(1);
-      }
-      85% {
-        transform: translate(-50%, -20px) scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -20px) scale(0.9);
-        opacity: 0;
-      }
+      0% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
+      15% { transform: translate(-50%, -20px) scale(1); opacity: 1; }
+      30% { transform: translate(-80px, -70px) scale(1); }
+      50% { transform: translate(0px, 30px) scale(1); }
+      70% { transform: translate(80px, -70px) scale(1); }
+      85% { transform: translate(-50%, -20px) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
     }
 
     .controls {
@@ -186,7 +184,6 @@
       background: rgba(187, 134, 252, 0.2);
     }
 
-    /* Fullscreen Overlay Screen */
     .fullscreen-overlay {
       position: absolute;
       top: 0;
@@ -253,7 +250,9 @@
 </head>
 <body>
 
-  <div class="phone-container">
+  <div class="phone-container" id="phoneContainer">
+    <div class="touch-finger" id="touchFinger">👆</div>
+
     <div class="header">
       <h1 id="status-title">Set up your password</h1>
       <p id="status-sub">Draw any shape, heart, or gesture</p>
@@ -269,7 +268,6 @@
       <button class="btn btn-reset" id="resetBtn">Create New Pattern</button>
     </div>
 
-    <!-- Fullscreen Success Modal -->
     <div class="fullscreen-overlay" id="fullOverlay">
       <div class="icon-box">💜</div>
       <h2>New password created!</h2>
@@ -279,6 +277,7 @@
   </div>
 
   <script>
+    const phoneContainer = document.getElementById('phoneContainer');
     const canvas = document.getElementById('gestureCanvas');
     const ctx = canvas.getContext('2d');
     const saveBtn = document.getElementById('saveBtn');
@@ -288,6 +287,7 @@
     const statusTitle = document.getElementById('status-title');
     const statusSub = document.getElementById('status-sub');
     const handHint = document.getElementById('handHint');
+    const touchFinger = document.getElementById('touchFinger');
 
     let isDrawing = false;
     let hasDrawn = false;
@@ -312,7 +312,19 @@
       redraw();
     }
 
-    function getPos(e) {
+    // Отримання координат відносно всього контейнера телефону для пальця
+    function getGlobalPos(e) {
+      const rect = phoneContainer.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    // Отримання координат для canvas малювання
+    function getCanvasPos(e) {
       const rect = canvas.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -322,23 +334,44 @@
       };
     }
 
-    function startDrawing(e) {
-      triggerFullscreen();
-      if (isLocked) return;
-      
-      // Сховуємо анімацію пальця при першому торканні
-      handHint.classList.add('hidden');
+    function updateFingerPosition(globalPos) {
+      touchFinger.style.left = `${globalPos.x}px`;
+      touchFinger.style.top = `${globalPos.y}px`;
+    }
 
+    // Відстеження руху по всьому екрану
+    function handleGlobalStart(e) {
+      triggerFullscreen();
+      handHint.classList.add('hidden');
+      
+      const globalPos = getGlobalPos(e);
+      updateFingerPosition(globalPos);
+      touchFinger.classList.add('active');
+    }
+
+    function handleGlobalMove(e) {
+      const globalPos = getGlobalPos(e);
+      updateFingerPosition(globalPos);
+    }
+
+    function handleGlobalEnd() {
+      touchFinger.classList.remove('active');
+    }
+
+    // Малювання на Canvas
+    function startDrawing(e) {
+      if (isLocked) return;
       isDrawing = true;
       hasDrawn = true;
-      const pos = getPos(e);
+      
+      const pos = getCanvasPos(e);
       points.push([pos]);
       redraw();
     }
 
     function moveDrawing(e) {
       if (!isDrawing || isLocked) return;
-      const pos = getPos(e);
+      const pos = getCanvasPos(e);
       const currentStroke = points[points.length - 1];
       currentStroke.push(pos);
       redraw();
@@ -393,12 +426,20 @@
       statusSub.textContent = "Draw any shape, heart, or gesture";
     }
 
-    // Mouse events
+    // Глобальні події для великого пальця
+    phoneContainer.addEventListener('mousedown', handleGlobalStart);
+    window.addEventListener('mousemove', handleGlobalMove);
+    window.addEventListener('mouseup', handleGlobalEnd);
+
+    phoneContainer.addEventListener('touchstart', handleGlobalStart);
+    window.addEventListener('touchmove', handleGlobalMove);
+    window.addEventListener('touchend', handleGlobalEnd);
+
+    // Canvas події
     canvas.addEventListener('mousedown', startDrawing);
     window.addEventListener('mousemove', moveDrawing);
     window.addEventListener('mouseup', stopDrawing);
 
-    // Touch events (finger)
     canvas.addEventListener('touchstart', startDrawing);
     window.addEventListener('touchmove', moveDrawing);
     window.addEventListener('touchend', stopDrawing);
