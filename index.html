@@ -15,7 +15,7 @@
     }
 
     body {
-      background-color: #05040a;
+      background-color: #030206;
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
@@ -25,22 +25,27 @@
       overflow: hidden;
     }
 
+    /* Target 9:16 portrait aspect ratio for smooth video recording */
     .phone-container {
-      width: 100%;
-      max-width: 400px;
+      width: 100vw;
+      max-width: 430px;
       height: 100vh;
-      max-height: 820px;
-      background: radial-gradient(circle at center, #150a21 0%, #05040a 100%);
+      max-height: 932px;
+      aspect-ratio: 9 / 16;
+      background: radial-gradient(circle at center, #150a24 0%, #030206 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: 50px 20px 60px;
+      padding: 60px 24px 80px;
       position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
     }
 
     .header {
       text-align: center;
+      margin-top: 10px;
     }
 
     .header h1 {
@@ -61,11 +66,12 @@
       position: relative;
       width: 320px;
       height: 380px;
-      border: 1px solid rgba(187, 134, 252, 0.15);
-      border-radius: 24px;
-      background: rgba(18, 10, 31, 0.4);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6), 0 0 25px rgba(138, 43, 226, 0.1);
+      border: 1px solid rgba(187, 134, 252, 0.18);
+      border-radius: 28px;
+      background: rgba(18, 10, 31, 0.45);
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.7), 0 0 30px rgba(138, 43, 226, 0.12);
       overflow: hidden;
+      margin-bottom: 20px;
     }
 
     canvas {
@@ -78,65 +84,111 @@
     .controls {
       width: 100%;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 30px;
     }
 
     .btn {
-      background: rgba(187, 134, 252, 0.1);
-      border: 1px solid rgba(187, 134, 252, 0.4);
-      color: #e2c8ff;
-      padding: 14px 32px;
+      width: 85%;
+      padding: 16px 24px;
       border-radius: 30px;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(157, 78, 221, 0.2);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       outline: none;
-    }
-
-    .btn:active {
-      transform: scale(0.95);
-      background: rgba(187, 134, 252, 0.25);
-      box-shadow: 0 0 30px rgba(157, 78, 221, 0.5);
-    }
-
-    /* Toast notification */
-    .toast {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: rgba(22, 12, 38, 0.95);
-      border: 1.5px solid #c872ff;
-      padding: 22px 32px;
-      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 0 35px rgba(200, 114, 255, 0.4);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+      border: none;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+    }
+
+    .btn-save:active {
+      transform: scale(0.96);
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.7);
+    }
+
+    .btn-reset {
+      background: rgba(187, 134, 252, 0.08);
+      border: 1px solid rgba(187, 134, 252, 0.3);
+      color: #e2c8ff;
+      font-size: 14px;
+      padding: 12px 20px;
+    }
+
+    .btn-reset:active {
+      transform: scale(0.96);
+      background: rgba(187, 134, 252, 0.2);
+    }
+
+    /* Fullscreen Overlay Screen */
+    .fullscreen-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(8, 4, 15, 0.95);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 10;
-      pointer-events: none;
+      transform: scale(0.9);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
     }
 
-    .toast.show {
+    .fullscreen-overlay.show {
       opacity: 1;
       visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
+      transform: scale(1);
     }
 
-    .toast-icon {
-      font-size: 36px;
-      margin-bottom: 8px;
-      display: block;
+    .icon-box {
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, rgba(126, 34, 206, 0.05) 100%);
+      border: 2px solid #a855f7;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 42px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.5);
+      animation: pulse 2s infinite ease-in-out;
     }
 
-    .toast-title {
-      font-size: 18px;
+    @keyframes pulse {
+      0% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 45px rgba(168, 85, 247, 0.7); transform: scale(1.05); }
+      100% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); transform: scale(1); }
+    }
+
+    .fullscreen-overlay h2 {
+      font-size: 26px;
+      font-weight: 700;
       color: #ffffff;
-      font-weight: 600;
-      text-shadow: 0 0 10px #c872ff;
+      text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+      margin-bottom: 10px;
+    }
+
+    .fullscreen-overlay p {
+      font-size: 15px;
+      color: #a799c7;
+      margin-bottom: 35px;
     }
   </style>
 </head>
@@ -153,20 +205,26 @@
     </div>
 
     <div class="controls">
-      <button class="btn" id="resetBtn">Create New Pattern</button>
+      <button class="btn btn-save" id="saveBtn">Save New Password</button>
+      <button class="btn btn-reset" id="resetBtn">Create New Pattern</button>
     </div>
 
-    <div class="toast" id="toast">
-      <span class="toast-icon">💜</span>
-      <div class="toast-title">New password created!</div>
+    <!-- Fullscreen Success Modal -->
+    <div class="fullscreen-overlay" id="fullOverlay">
+      <div class="icon-box">💜</div>
+      <h2>New password created!</h2>
+      <p>Your custom gesture password has been set successfully.</p>
+      <button class="btn btn-save" id="overlayCloseBtn" style="width: 70%;">Done</button>
     </div>
   </div>
 
   <script>
     const canvas = document.getElementById('gestureCanvas');
     const ctx = canvas.getContext('2d');
+    const saveBtn = document.getElementById('saveBtn');
     const resetBtn = document.getElementById('resetBtn');
-    const toast = document.getElementById('toast');
+    const fullOverlay = document.getElementById('fullOverlay');
+    const overlayCloseBtn = document.getElementById('overlayCloseBtn');
     const statusTitle = document.getElementById('status-title');
     const statusSub = document.getElementById('status-sub');
 
@@ -196,7 +254,6 @@
       if (isLocked) return;
       isDrawing = true;
       hasDrawn = true;
-      points = [];
       const pos = getPos(e);
       points.push([pos]);
       redraw();
@@ -213,10 +270,6 @@
     function stopDrawing() {
       if (!isDrawing) return;
       isDrawing = false;
-      if (hasDrawn && !isLocked) {
-        isLocked = true;
-        showSuccess();
-      }
     }
 
     function redraw() {
@@ -230,7 +283,7 @@
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.shadowColor = '#b300ff';
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = 22;
 
       for (let stroke of points) {
         if (stroke.length < 2) continue;
@@ -245,14 +298,10 @@
       ctx.restore();
     }
 
-    function showSuccess() {
-      toast.classList.add('show');
-      statusTitle.textContent = "New password created!";
-      statusSub.textContent = "Your custom gesture password is active";
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2200);
+    function savePassword() {
+      if (!hasDrawn || points.length === 0) return;
+      isLocked = true;
+      fullOverlay.classList.add('show');
     }
 
     function reset() {
@@ -261,7 +310,7 @@
       isLocked = false;
       points = [];
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      toast.classList.remove('show');
+      fullOverlay.classList.remove('show');
       statusTitle.textContent = "Set up your password";
       statusSub.textContent = "Draw any shape, heart, or gesture";
     }
@@ -276,7 +325,9 @@
     window.addEventListener('touchmove', moveDrawing);
     window.addEventListener('touchend', stopDrawing);
 
+    saveBtn.addEventListener('click', savePassword);
     resetBtn.addEventListener('click', reset);
+    overlayCloseBtn.addEventListener('click', reset);
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
