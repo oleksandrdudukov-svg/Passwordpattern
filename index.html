@@ -12,6 +12,9 @@
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
+      /* Прибираємо синє підсвічування при тапі на мобільних */
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
     }
 
     body {
@@ -25,7 +28,6 @@
       overflow: hidden;
     }
 
-    /* Target 9:16 portrait aspect ratio for smooth video recording */
     .phone-container {
       width: 100vw;
       max-width: 430px;
@@ -79,6 +81,8 @@
       height: 100%;
       display: block;
       cursor: crosshair;
+      -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
     }
 
     .controls {
@@ -98,8 +102,16 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      outline: none;
+      outline: none !important;
       text-align: center;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-appearance: none;
+    }
+
+    .btn:focus, .btn:active {
+      outline: none !important;
+      box-shadow: none;
+      -webkit-tap-highlight-color: transparent !important;
     }
 
     .btn-save {
