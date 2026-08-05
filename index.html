@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#030206">
+  <meta name="theme-color" content="#150a24">
 
   <style>
     * {
@@ -22,61 +22,53 @@
       outline: none !important;
     }
 
+    /* Градиент на абсолютно ВЕСЬ экран монитора/телефона */
     html, body {
-      width: 100%;
-      height: 100%;
-      /* Градієнт на весь екран пристрою — без чорних смуг */
-      background: radial-gradient(circle at center, #150a24 0%, #030206 100%);
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #1b0c30 0%, #080410 100%);
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
-    /* Адаптивний контейнер під будь-який телефон */
-    .phone-container {
+    .app-container {
       width: 100%;
       height: 100%;
-      max-width: 430px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 20px);
+      padding: 40px 24px 50px;
       position: relative;
-      overflow: hidden;
     }
 
-    /* Заголовок опущено нижче */
     .header {
       text-align: center;
-      margin-top: 25px;
+      margin-top: 20px;
       width: 100%;
     }
 
     .header h1 {
-      font-size: clamp(24px, 7vw, 32px);
+      font-size: clamp(28px, 6vw, 42px);
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: #ffffff;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(168, 85, 247, 0.6);
-      line-height: 1.1;
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 45px rgba(168, 85, 247, 0.7);
     }
 
-    /* Адаптивна зона малювання */
+    /* Полотно подстраивается по ширине и высоте */
     .canvas-wrapper {
       position: relative;
       width: 100%;
-      max-width: 300px;
-      height: 42vh;
-      max-height: 350px;
-      border: 2px solid rgba(187, 134, 252, 0.3);
-      border-radius: 24px;
-      background: rgba(18, 10, 31, 0.6);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 25px rgba(138, 43, 226, 0.2);
+      max-width: 400px;
+      height: 50vh;
+      max-height: 420px;
+      border: 2px solid rgba(187, 134, 252, 0.35);
+      border-radius: 28px;
+      background: rgba(18, 10, 31, 0.5);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 35px rgba(138, 43, 226, 0.25);
       overflow: hidden;
     }
 
@@ -89,15 +81,15 @@
 
     .hand-hint {
       position: absolute;
-      width: 50px;
-      height: 50px;
-      font-size: 46px;
+      width: 60px;
+      height: 60px;
+      font-size: 56px;
       pointer-events: none;
       z-index: 10;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      filter: drop-shadow(0 0 16px rgba(200, 100, 255, 0.9));
+      filter: drop-shadow(0 0 18px rgba(200, 100, 255, 0.9));
       animation: drawHeartHint 3.2s infinite ease-in-out;
       transition: opacity 0.3s ease;
     }
@@ -109,7 +101,7 @@
 
     .touch-finger {
       position: absolute;
-      font-size: 50px;
+      font-size: 60px;
       pointer-events: none;
       z-index: 999;
       transform: translate(-30%, -10%);
@@ -125,33 +117,33 @@
     }
 
     @keyframes drawHeartHint {
-      0% { transform: translate(-50%, -15px) scale(0.9); opacity: 0; }
-      15% { transform: translate(-50%, -15px) scale(1); opacity: 1; }
-      30% { transform: translate(-60px, -50px) scale(1); }
-      50% { transform: translate(0px, 20px) scale(1); }
-      70% { transform: translate(-60px, -50px) scale(1); }
-      85% { transform: translate(-50%, -15px) scale(1); opacity: 1; }
-      100% { transform: translate(-50%, -15px) scale(0.9); opacity: 0; }
+      0% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
+      15% { transform: translate(-50%, -20px) scale(1); opacity: 1; }
+      30% { transform: translate(-70px, -60px) scale(1); }
+      50% { transform: translate(0px, 25px) scale(1); }
+      70% { transform: translate(-70px, -60px) scale(1); }
+      85% { transform: translate(-50%, -20px) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
     }
 
-    /* Кнопки піднято вище */
     .controls {
       width: 100%;
+      max-width: 400px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 14px;
       margin-bottom: 20px;
     }
 
     .btn {
-      width: 88%;
-      padding: 14px 18px;
-      border-radius: 28px;
-      font-size: 15px;
+      width: 100%;
+      padding: 18px;
+      border-radius: 30px;
+      font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: all 0.3s ease;
       outline: none !important;
       text-align: center;
       -webkit-appearance: none;
@@ -161,20 +153,20 @@
       background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
       border: none;
       color: #ffffff;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
     }
 
     .btn-save:active {
       transform: scale(0.96);
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.8);
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.8);
     }
 
     .btn-reset {
       background: rgba(187, 134, 252, 0.08);
       border: 1px solid rgba(187, 134, 252, 0.3);
       color: #e2c8ff;
-      font-size: 13px;
-      padding: 10px 16px;
+      font-size: 14px;
+      padding: 12px;
     }
 
     .btn-reset:active {
@@ -195,7 +187,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 30px;
       text-align: center;
       opacity: 0;
       visibility: hidden;
@@ -211,39 +203,39 @@
     }
 
     .icon-box {
-      width: 80px;
-      height: 80px;
+      width: 90px;
+      height: 90px;
       background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, rgba(126, 34, 206, 0.05) 100%);
       border: 2px solid #a855f7;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 38px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+      font-size: 44px;
+      margin-bottom: 25px;
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.5);
       animation: pulse 2s infinite ease-in-out;
     }
 
     @keyframes pulse {
       0% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); transform: scale(1); }
-      50% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.7); transform: scale(1.05); }
+      50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.7); transform: scale(1.05); }
       100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); transform: scale(1); }
     }
 
     .fullscreen-overlay h2 {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 900;
       color: #ffffff;
       text-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       text-transform: uppercase;
     }
   </style>
 </head>
 <body>
 
-  <div class="phone-container" id="phoneContainer">
+  <div class="app-container" id="appContainer">
     <div class="touch-finger" id="touchFinger">👆</div>
 
     <div class="header">
@@ -263,12 +255,12 @@
     <div class="fullscreen-overlay" id="fullOverlay">
       <div class="icon-box">💜</div>
       <h2>PASSWORD SET!</h2>
-      <button class="btn btn-save" id="overlayCloseBtn" style="width: 70%;">DONE</button>
+      <button class="btn btn-save" id="overlayCloseBtn" style="width: 240px;">DONE</button>
     </div>
   </div>
 
   <script>
-    const phoneContainer = document.getElementById('phoneContainer');
+    const appContainer = document.getElementById('appContainer');
     const canvas = document.getElementById('gestureCanvas');
     const ctx = canvas.getContext('2d');
     const saveBtn = document.getElementById('saveBtn');
@@ -302,7 +294,7 @@
     }
 
     function getGlobalPos(e) {
-      const rect = phoneContainer.getBoundingClientRect();
+      const rect = appContainer.getBoundingClientRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       return {
@@ -409,11 +401,11 @@
       handHint.classList.remove('hidden');
     }
 
-    phoneContainer.addEventListener('mousedown', handleGlobalStart);
+    appContainer.addEventListener('mousedown', handleGlobalStart);
     window.addEventListener('mousemove', handleGlobalMove);
     window.addEventListener('mouseup', handleGlobalEnd);
 
-    phoneContainer.addEventListener('touchstart', handleGlobalStart);
+    appContainer.addEventListener('touchstart', handleGlobalStart);
     window.addEventListener('touchmove', handleGlobalMove);
     window.addEventListener('touchend', handleGlobalEnd);
 
