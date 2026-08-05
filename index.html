@@ -23,8 +23,8 @@
     }
 
     html, body {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       background-color: #000000;
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -34,51 +34,51 @@
       align-items: center;
     }
 
-    /* Формат 9:16 */
+    /* Гарантовані рамки 9:16 під будь-який мобільний екран */
     .phone-container {
       width: 100vw;
       height: 100vh;
-      max-width: 430px;
-      max-height: 932px;
+      max-width: 414px;
+      max-height: 736px; /* Стандарт 9:16 */
       aspect-ratio: 9 / 16;
       background: radial-gradient(circle at center, #150a24 0%, #030206 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: 40px 20px 50px;
+      padding: 10px 16px 20px;
       position: relative;
       overflow: hidden;
     }
 
-    /* Єдина велика надпис */
+    /* Біла велика надпис, опущена нижче */
     .header {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 30px;
       width: 100%;
     }
 
     .header h1 {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
       color: #ffffff;
-      text-shadow: 0 0 20px rgba(187, 134, 252, 0.9), 0 0 40px rgba(168, 85, 247, 0.6);
+      text-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 45px rgba(168, 85, 247, 0.6);
       line-height: 1.1;
     }
 
-    /* Зона малювання */
+    /* Компактна зона малювання */
     .canvas-wrapper {
       position: relative;
-      width: 100%;
-      max-width: 320px;
-      height: 380px;
+      width: 290px;
+      height: 330px;
       border: 2px solid rgba(187, 134, 252, 0.3);
-      border-radius: 28px;
+      border-radius: 24px;
       background: rgba(18, 10, 31, 0.6);
-      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 0 30px rgba(138, 43, 226, 0.2);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 25px rgba(138, 43, 226, 0.2);
       overflow: hidden;
+      margin: 5px 0;
     }
 
     canvas {
@@ -110,7 +110,7 @@
 
     .touch-finger {
       position: absolute;
-      font-size: 60px;
+      font-size: 56px;
       pointer-events: none;
       z-index: 999;
       transform: translate(-30%, -10%);
@@ -128,26 +128,28 @@
     @keyframes drawHeartHint {
       0% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
       15% { transform: translate(-50%, -20px) scale(1); opacity: 1; }
-      30% { transform: translate(-80px, -70px) scale(1); }
-      50% { transform: translate(0px, 30px) scale(1); }
-      70% { transform: translate(-80px, -70px) scale(1); }
+      30% { transform: translate(-70px, -60px) scale(1); }
+      50% { transform: translate(0px, 25px) scale(1); }
+      70% { transform: translate(-70px, -60px) scale(1); }
       85% { transform: translate(-50%, -20px) scale(1); opacity: 1; }
       100% { transform: translate(-50%, -20px) scale(0.9); opacity: 0; }
     }
 
+    /* Кнопки піднято вище */
     .controls {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
+      margin-bottom: 15px;
     }
 
     .btn {
-      width: 90%;
-      padding: 16px 20px;
-      border-radius: 30px;
-      font-size: 16px;
+      width: 88%;
+      padding: 14px 18px;
+      border-radius: 28px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -160,20 +162,20 @@
       background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
       border: none;
       color: #ffffff;
-      box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
     }
 
     .btn-save:active {
       transform: scale(0.96);
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.8);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.8);
     }
 
     .btn-reset {
       background: rgba(187, 134, 252, 0.08);
       border: 1px solid rgba(187, 134, 252, 0.3);
       color: #e2c8ff;
-      font-size: 14px;
-      padding: 12px 20px;
+      font-size: 13px;
+      padding: 10px 16px;
     }
 
     .btn-reset:active {
@@ -194,7 +196,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 30px;
+      padding: 20px;
       text-align: center;
       opacity: 0;
       visibility: hidden;
@@ -210,32 +212,32 @@
     }
 
     .icon-box {
-      width: 90px;
-      height: 90px;
+      width: 80px;
+      height: 80px;
       background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, rgba(126, 34, 206, 0.05) 100%);
       border: 2px solid #a855f7;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 42px;
-      margin-bottom: 24px;
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.5);
+      font-size: 38px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
       animation: pulse 2s infinite ease-in-out;
     }
 
     @keyframes pulse {
-      0% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); transform: scale(1); }
-      50% { box-shadow: 0 0 45px rgba(168, 85, 247, 0.7); transform: scale(1.05); }
-      100% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); transform: scale(1); }
+      0% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); transform: scale(1); }
+      50% { box-shadow: 0 0 35px rgba(168, 85, 247, 0.7); transform: scale(1.05); }
+      100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); transform: scale(1); }
     }
 
     .fullscreen-overlay h2 {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 900;
       color: #ffffff;
       text-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       text-transform: uppercase;
     }
   </style>
