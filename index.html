@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Change Password Demo</title>
+  <title>Change Password</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -34,7 +34,7 @@
       align-items: center;
     }
 
-    /* Строгий формат 9:16 для всього контейнера */
+    /* Строгий формат 9:16 */
     .phone-container {
       width: 100vw;
       height: 100vh;
@@ -46,41 +46,34 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: 35px 20px 45px;
+      padding: 40px 20px 50px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 50px rgba(168, 85, 247, 0.2);
     }
 
-    /* Дуже великий і чіткий заголовок */
+    /* Єдина величезна надпис вгорі */
     .header {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 15px;
       width: 100%;
     }
 
     .header h1 {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 1px;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       color: #ffffff;
-      text-shadow: 0 0 20px rgba(187, 134, 252, 0.8), 0 0 35px rgba(168, 85, 247, 0.5);
+      text-shadow: 0 0 20px rgba(187, 134, 252, 0.9), 0 0 40px rgba(168, 85, 247, 0.6);
+      line-height: 1.1;
     }
 
-    .header p {
-      font-size: 15px;
-      color: #b3a4d6;
-      margin-top: 6px;
-      font-weight: 500;
-    }
-
-    /* Зона малювання вміщується у 9:16 */
+    /* Зона малювання */
     .canvas-wrapper {
       position: relative;
       width: 100%;
-      max-width: 310px;
-      height: 350px;
+      max-width: 320px;
+      height: 380px;
       border: 2px solid rgba(187, 134, 252, 0.3);
       border-radius: 28px;
       background: rgba(18, 10, 31, 0.6);
@@ -95,7 +88,7 @@
       cursor: none;
     }
 
-    /* Анімована підказка-початок */
+    /* Анімована підказка */
     .hand-hint {
       position: absolute;
       width: 60px;
@@ -116,10 +109,10 @@
       visibility: hidden;
     }
 
-    /* Великий палець на весь екран */
+    /* Великий палець */
     .touch-finger {
       position: absolute;
-      font-size: 56px;
+      font-size: 60px;
       pointer-events: none;
       z-index: 999;
       transform: translate(-30%, -10%);
@@ -190,7 +183,7 @@
       background: rgba(187, 134, 252, 0.2);
     }
 
-    /* Повноекранне вікно успіху */
+    /* Повноекранний екран збереження */
     .fullscreen-overlay {
       position: absolute;
       top: 0;
@@ -241,18 +234,12 @@
     }
 
     .fullscreen-overlay h2 {
-      font-size: 28px;
-      font-weight: 800;
+      font-size: 32px;
+      font-weight: 900;
       color: #ffffff;
       text-shadow: 0 0 20px rgba(168, 85, 247, 0.8);
-      margin-bottom: 12px;
+      margin-bottom: 30px;
       text-transform: uppercase;
-    }
-
-    .fullscreen-overlay p {
-      font-size: 15px;
-      color: #a799c7;
-      margin-bottom: 35px;
     }
   </style>
 </head>
@@ -262,8 +249,7 @@
     <div class="touch-finger" id="touchFinger">👆</div>
 
     <div class="header">
-      <h1 id="status-title">CHANGE PASSWORD</h1>
-      <p id="status-sub">Draw your pattern or gesture</p>
+      <h1>CHANGE PASSWORD</h1>
     </div>
 
     <div class="canvas-wrapper">
@@ -279,7 +265,6 @@
     <div class="fullscreen-overlay" id="fullOverlay">
       <div class="icon-box">💜</div>
       <h2>PASSWORD SET!</h2>
-      <p>Your new gesture password is now active.</p>
       <button class="btn btn-save" id="overlayCloseBtn" style="width: 70%;">DONE</button>
     </div>
   </div>
@@ -292,8 +277,6 @@
     const resetBtn = document.getElementById('resetBtn');
     const fullOverlay = document.getElementById('fullOverlay');
     const overlayCloseBtn = document.getElementById('overlayCloseBtn');
-    const statusTitle = document.getElementById('status-title');
-    const statusSub = document.getElementById('status-sub');
     const handHint = document.getElementById('handHint');
     const touchFinger = document.getElementById('touchFinger');
 
@@ -426,8 +409,6 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       fullOverlay.classList.remove('show');
       handHint.classList.remove('hidden');
-      statusTitle.textContent = "CHANGE PASSWORD";
-      statusSub.textContent = "Draw your pattern or gesture";
     }
 
     phoneContainer.addEventListener('mousedown', handleGlobalStart);
