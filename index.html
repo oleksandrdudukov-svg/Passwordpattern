@@ -2,429 +2,322 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Change Password</title>
-  
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#150a24">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5G Speed Switcher</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: none;
-      -webkit-tap-highlight-color: transparent !important;
-      outline: none !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
-    /* Суцільний неоновий градієнт на весь екран без чорних смуг */
-    html, body {
-      width: 100vw;
-      height: 100vh;
-      background: radial-gradient(circle at center, #1b0c30 0%, #080410 100%);
+    body {
+      background-color: #121315;
       color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    /* Компактний контейнер під 9:16 */
-    .app-container {
-      width: 100%;
-      height: 100%;
-      max-width: 380px;
-      max-height: 675px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items: center;
-      padding: 15px 12px;
-      position: relative;
-    }
-
-    .header {
-      text-align: center;
-      margin-top: 25px;
-      margin-bottom: 5px;
-      width: 100%;
-    }
-
-    .header h1 {
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(168, 85, 247, 0.6);
-      line-height: 1.1;
-    }
-
-    .canvas-wrapper {
-      position: relative;
-      width: 260px;
-      height: 280px;
-      border: 2px solid rgba(187, 134, 252, 0.3);
-      border-radius: 24px;
-      background: rgba(18, 10, 31, 0.6);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8), 0 0 25px rgba(138, 43, 226, 0.2);
       overflow: hidden;
     }
 
-    canvas {
+    /* Адаптація під формат 9:16 */
+    .screen-container {
       width: 100%;
       height: 100%;
-      display: block;
-      cursor: none;
+      max-width: 450px;
+      background: #1c1e22;
+      border: 2px solid #33373e;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 60px 24px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
     }
 
-    .hand-hint {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      font-size: 46px;
-      pointer-events: none;
-      z-index: 10;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      filter: drop-shadow(0 0 16px rgba(200, 100, 255, 0.9));
-      animation: drawHeartHint 3.2s infinite ease-in-out;
-      transition: opacity 0.3s ease;
-    }
-
-    .hand-hint.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .touch-finger {
-      position: absolute;
-      font-size: 50px;
-      pointer-events: none;
-      z-index: 999;
-      transform: translate(-30%, -10%);
-      filter: drop-shadow(0 0 20px rgba(217, 128, 255, 1));
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.15s ease;
-    }
-
-    .touch-finger.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    @keyframes drawHeartHint {
-      0% { transform: translate(-50%, -15px) scale(0.9); opacity: 0; }
-      15% { transform: translate(-50%, -15px) scale(1); opacity: 1; }
-      30% { transform: translate(-60px, -50px) scale(1); }
-      50% { transform: translate(0px, 20px) scale(1); }
-      70% { transform: translate(-60px, -50px) scale(1); }
-      85% { transform: translate(-50%, -15px) scale(1); opacity: 1; }
-      100% { transform: translate(-50%, -15px) scale(0.9); opacity: 0; }
-    }
-
-    .controls {
+    /* --- АНТЕНА (ВЕЛИКА) --- */
+    .antenna-container {
+      height: 280px;
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 25px;
+      justify-content: flex-end;
+      position: relative;
+      margin-top: 20px;
     }
 
-    .btn {
-      width: 85%;
-      padding: 12px 16px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      outline: none !important;
-      text-align: center;
-      -webkit-appearance: none;
-    }
-
-    .btn-save {
-      background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
-      border: none;
-      color: #ffffff;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-    }
-
-    .btn-save:active {
-      transform: scale(0.96);
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.8);
-    }
-
-    .btn-reset {
-      background: rgba(187, 134, 252, 0.08);
-      border: 1px solid rgba(187, 134, 252, 0.3);
-      color: #e2c8ff;
-      font-size: 12px;
-      padding: 8px 14px;
-    }
-
-    .btn-reset:active {
-      transform: scale(0.96);
-      background: rgba(187, 134, 252, 0.2);
-    }
-
-    /* Компактне фіолетове градієнтне вікно підтвердження */
-    .mini-modal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.7);
-      background: radial-gradient(circle at center, #2e104e 0%, #120624 100%);
-      border: 1.5px solid #d980ff;
-      padding: 20px 24px;
-      border-radius: 22px;
+    .antenna-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 0 35px rgba(187, 134, 252, 0.6), inset 0 0 12px rgba(217, 128, 255, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 100;
-      width: 82%;
-      max-width: 250px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-origin: bottom center;
     }
 
-    .mini-modal.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
+    /* Опускання антени */
+    .antenna-wrapper.lowered {
+      transform: translateY(70px) scaleY(0.7);
     }
 
-    .mini-modal .icon {
-      font-size: 32px;
-      filter: drop-shadow(0 0 10px rgba(217, 128, 255, 0.9));
+    /* Елементи антени */
+    .signal-wave {
+      width: 120px;
+      height: 40px;
+      border: 8px solid #444850;
+      border-bottom: none;
+      border-radius: 80px 80px 0 0;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
     }
 
-    .mini-modal h2 {
-      font-size: 15px;
-      font-weight: 800;
-      color: #ffffff;
+    .antenna-top {
+      width: 32px;
+      height: 32px;
+      background-color: #444850;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .antenna-pole {
+      width: 14px;
+      height: 120px;
+      background-color: #444850;
+      border-radius: 7px;
+      transition: all 0.3s ease;
+    }
+
+    .antenna-base {
+      width: 110px;
+      height: 18px;
+      background-color: #2a2d34;
+      border-radius: 9px;
+    }
+
+    /* Ефект неонового підсвічування при активації */
+    .connected .signal-wave {
+      border-color: #00d2ff;
+      box-shadow: 0 -10px 30px rgba(0, 210, 255, 0.8);
+    }
+
+    .connected .antenna-top {
+      background-color: #00d2ff;
+      box-shadow: 0 0 35px #00d2ff, 0 0 60px #00d2ff;
+    }
+
+    .connected .antenna-pole {
+      background-color: #00d2ff;
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.9);
+    }
+
+    /* СТАТУС */
+    .status-text {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #555a64;
       text-transform: uppercase;
+      margin-top: 15px;
+      transition: all 0.3s ease;
       text-align: center;
-      letter-spacing: 0.8px;
-      text-shadow: 0 0 12px rgba(217, 128, 255, 0.9);
-      line-height: 1.3;
     }
 
-    .mini-modal .btn-modal {
-      margin-top: 4px;
+    .status-text.active {
+      color: #00d2ff;
+      text-shadow: 0 0 20px rgba(0, 210, 255, 0.8);
+    }
+
+    /* --- КНОПКИ МЕРЕЖІ --- */
+    .network-buttons {
+      display: flex;
+      gap: 12px;
       width: 100%;
-      padding: 9px;
-      font-size: 12px;
-      letter-spacing: 0.5px;
+    }
+
+    .btn-network {
+      flex: 1;
+      padding: 18px 0;
+      background: #26292e;
+      border: 2px solid #3d414a;
+      border-radius: 16px;
+      color: #7b808a;
+      font-weight: 900;
+      font-size: 22px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    /* Активна кнопка 5G */
+    .btn-network.active {
+      background: #0052cc;
+      border-color: #00d2ff;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.6);
+    }
+
+    /* --- СЛАЙДЕР ШВИДКОСТІ --- */
+    .slider-section {
+      width: 100%;
+      background: #23262c;
+      padding: 24px;
+      border-radius: 20px;
+      border: 1px solid #353942;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .slider-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #a0a5b0;
+    }
+
+    .speed-value {
+      font-size: 36px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .speed-value span {
+      font-size: 20px;
+      color: #00d2ff;
+      margin-left: 4px;
+    }
+
+    .range-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 16px;
+      border-radius: 8px;
+      background: #121315;
+      outline: none;
+    }
+
+    .range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #00d2ff;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 210, 255, 1);
+    }
+
+    .range-slider::-moz-range-thumb {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #00d2ff;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 210, 255, 1);
+      border: none;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #616672;
     }
   </style>
 </head>
 <body>
 
-  <div class="app-container" id="appContainer">
-    <div class="touch-finger" id="touchFinger">👆</div>
-
-    <div class="header">
-      <h1>CHANGE PASSWORD</h1>
+  <div class="screen-container">
+    
+    <!-- Антена -->
+    <div class="antenna-container">
+      <div class="antenna-wrapper" id="antennaWrapper">
+        <div class="signal-wave"></div>
+        <div class="antenna-top"></div>
+        <div class="antenna-pole"></div>
+      </div>
+      <div class="antenna-base"></div>
+      <div class="status-text" id="statusText">DISCONNECTED</div>
     </div>
 
-    <div class="canvas-wrapper">
-      <div class="hand-hint" id="handHint">👆</div>
-      <canvas id="gestureCanvas"></canvas>
+    <!-- Кнопки вибору мережі -->
+    <div class="network-buttons">
+      <button class="btn-network" onclick="selectNetwork(this)">2G</button>
+      <button class="btn-network" onclick="selectNetwork(this)">3G</button>
+      <button class="btn-network" onclick="selectNetwork(this)">4G</button>
+      <button class="btn-network active" id="btn5G" onclick="selectNetwork(this)">5G</button>
     </div>
 
-    <div class="controls">
-      <button class="btn btn-save" id="saveBtn">SAVE NEW PASSWORD</button>
-      <button class="btn btn-reset" id="resetBtn">CREATE NEW PATTERN</button>
+    <!-- Слайдер швидкості -->
+    <div class="slider-section">
+      <div class="slider-header">
+        <span class="slider-title">SPEED</span>
+        <div class="speed-value"><span id="speedDisplay">0</span> <span>Mbps</span></div>
+      </div>
+      <input 
+        type="range" 
+        min="0" 
+        max="5000" 
+        value="0" 
+        step="10" 
+        class="range-slider" 
+        id="speedSlider"
+      >
+      <div class="slider-labels">
+        <span>0</span>
+        <span>1K</span>
+        <span>5K</span>
+      </div>
     </div>
 
-    <!-- Акуратне маленьке неоново-фіолетове вікно -->
-    <div class="mini-modal" id="miniModal">
-      <div class="icon">💜</div>
-      <h2>PASSWORD SET SUCCESSFULLY</h2>
-      <button class="btn btn-save btn-modal" id="overlayCloseBtn">DONE</button>
-    </div>
   </div>
 
   <script>
-    const appContainer = document.getElementById('appContainer');
-    const canvas = document.getElementById('gestureCanvas');
-    const ctx = canvas.getContext('2d');
-    const saveBtn = document.getElementById('saveBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const miniModal = document.getElementById('miniModal');
-    const overlayCloseBtn = document.getElementById('overlayCloseBtn');
-    const handHint = document.getElementById('handHint');
-    const touchFinger = document.getElementById('touchFinger');
+    const slider = document.getElementById('speedSlider');
+    const speedDisplay = document.getElementById('speedDisplay');
+    const antennaWrapper = document.getElementById('antennaWrapper');
+    const statusText = document.getElementById('statusText');
 
-    let isDrawing = false;
-    let hasDrawn = false;
-    let isLocked = false;
-    let points = [];
-
-    function triggerFullscreen() {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        const docEl = document.documentElement;
-        if (docEl.requestFullscreen) {
-          docEl.requestFullscreen().catch(() => {});
-        } else if (docEl.webkitRequestFullscreen) {
-          docEl.webkitRequestFullscreen();
-        }
-      }
-    }
-
-    function resizeCanvas() {
-      const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      redraw();
-    }
-
-    function getGlobalPos(e) {
-      const rect = appContainer.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      };
-    }
-
-    function getCanvasPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      };
-    }
-
-    function updateFingerPosition(globalPos) {
-      touchFinger.style.left = `${globalPos.x}px`;
-      touchFinger.style.top = `${globalPos.y}px`;
-    }
-
-    function handleGlobalStart(e) {
-      triggerFullscreen();
-      handHint.classList.add('hidden');
+    // Спрацьовує миттєво при перетягуванні слайдера
+    slider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value);
+      speedDisplay.textContent = val;
       
-      const globalPos = getGlobalPos(e);
-      updateFingerPosition(globalPos);
-      touchFinger.classList.add('active');
-    }
-
-    function handleGlobalMove(e) {
-      const globalPos = getGlobalPos(e);
-      updateFingerPosition(globalPos);
-    }
-
-    function handleGlobalEnd() {
-      touchFinger.classList.remove('active');
-    }
-
-    function startDrawing(e) {
-      if (isLocked) return;
-      isDrawing = true;
-      hasDrawn = true;
-      
-      const pos = getCanvasPos(e);
-      points.push([pos]);
-      redraw();
-    }
-
-    function moveDrawing(e) {
-      if (!isDrawing || isLocked) return;
-      const pos = getCanvasPos(e);
-      const currentStroke = points[points.length - 1];
-      currentStroke.push(pos);
-      redraw();
-    }
-
-    function stopDrawing() {
-      if (!isDrawing) return;
-      isDrawing = false;
-    }
-
-    function redraw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (points.length === 0) return;
-
-      ctx.save();
-      ctx.strokeStyle = '#d980ff';
-      ctx.lineWidth = 6;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.shadowColor = '#b300ff';
-      ctx.shadowBlur = 22;
-
-      for (let stroke of points) {
-        if (stroke.length < 2) continue;
-        ctx.beginPath();
-        ctx.moveTo(stroke[0].x, stroke[0].y);
-        for (let i = 1; i < stroke.length; i++) {
-          ctx.lineTo(stroke[i].x, stroke[i].y);
-        }
-        ctx.stroke();
+      // Активація анімації підключення при 1000 або 5000 Mbps
+      if (val >= 5000) {
+        activateConnectedState('5K MAX SPEED');
+      } else if (val >= 1000 && val < 1050) {
+        activateConnectedState('1K SPEED');
+      } else {
+        resetAntenna();
       }
+    });
 
-      ctx.restore();
+    function activateConnectedState(text) {
+      antennaWrapper.classList.add('lowered', 'connected');
+      statusText.classList.add('active');
+      statusText.textContent = `CONNECTED (${text})`;
     }
 
-    function savePassword() {
-      if (!hasDrawn || points.length === 0) return;
-      isLocked = true;
-      miniModal.classList.add('show');
+    function resetAntenna() {
+      antennaWrapper.classList.remove('lowered', 'connected');
+      statusText.classList.remove('active');
+      statusText.textContent = 'DISCONNECTED';
     }
 
-    function reset() {
-      isDrawing = false;
-      hasDrawn = false;
-      isLocked = false;
-      points = [];
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      miniModal.classList.remove('show');
-      handHint.classList.remove('hidden');
+    function selectNetwork(element) {
+      document.querySelectorAll('.btn-network').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      element.classList.add('active');
     }
-
-    appContainer.addEventListener('mousedown', handleGlobalStart);
-    window.addEventListener('mousemove', handleGlobalMove);
-    window.addEventListener('mouseup', handleGlobalEnd);
-
-    appContainer.addEventListener('touchstart', handleGlobalStart);
-    window.addEventListener('touchmove', handleGlobalMove);
-    window.addEventListener('touchend', handleGlobalEnd);
-
-    canvas.addEventListener('mousedown', startDrawing);
-    window.addEventListener('mousemove', moveDrawing);
-    window.addEventListener('mouseup', stopDrawing);
-
-    canvas.addEventListener('touchstart', startDrawing);
-    window.addEventListener('touchmove', moveDrawing);
-    window.addEventListener('touchend', stopDrawing);
-
-    saveBtn.addEventListener('click', savePassword);
-    resetBtn.addEventListener('click', reset);
-    overlayCloseBtn.addEventListener('click', reset);
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
   </script>
 </body>
 </html>
